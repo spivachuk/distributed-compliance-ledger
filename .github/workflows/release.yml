@@ -7,6 +7,8 @@ on:
 
 env:
   BIN_NAME: dcld
+  GOPATH: ${{ env.GOPATH || ${{ env.HOME }}/go }}
+  GOBIN: ${{ env.GOBIN || ${{ env.GOPATH }}/bin }}
 
 jobs:
 
@@ -178,7 +180,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.checks.outputs.upload_url }}
-          asset_path: /go/bin/cosmovisor
+          asset_path: ${{ env.GOBIN }}/cosmovisor
           asset_name: cosmovisor
           asset_content_type: application/octet-stream  # TODO check for less generic type
 
