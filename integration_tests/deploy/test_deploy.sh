@@ -32,7 +32,7 @@ CHAIN_ID=dcl_test_deploy
 cleanup() {
     make test_deploy_env_clean
 }
-trap cleanup EXIT
+# trap cleanup EXIT
 
 
 function docker_exec {
@@ -72,7 +72,7 @@ for node in "$GVN_NAME" "$VN_NAME"; do
     echo "$node: Create NodeAdmin and Trustee keys"
     docker_exec "$node" dcld config keyring-backend test
     docker_exec "$node" dcld keys add "${node}_admin"
-    docker_exec "$node" dcld keys add "${node}_tr"
+    # docker_exec "$node" dcld keys add "${node}_tr"
 done
 
 echo "Generating persistent peers list"
@@ -91,8 +91,9 @@ test_divider
 echo "GENESIS NODE RUN"
 docker_exec -e KEYRING_BACKEND=test "$GVN_NAME"  \
     ./run_dcl_node -t genesis -c "$CHAIN_ID" \
-    --gen-key-name "${GVN_NAME}_admin" --gen-key-name-trustee "${GVN_NAME}_tr" \
+    --gen-key-name "${GVN_NAME}_admin" \
     "$GVN_NAME"
+    # --gen-key-name-trustee "${GVN_NAME}_tr" \
 docker_exec "$GVN_NAME" systemctl status dcld
 
 # we shold be fine with shell limits here
@@ -126,8 +127,8 @@ vn_admin_pubkey="$(docker_exec "$VN_NAME" dcld keys show "$vn_admin_name" -p)"
 # ensure that the genesis node is ready
 wait_for_height 2 15 "tcp://$GVN_IP:26657"
 
-docker_exec "$GVN_NAME" dcld tx auth propose-add-account --address "$vn_admin_addr" --pubkey "$vn_admin_pubkey" --roles="NodeAdmin" --from "${GVN_NAME}_tr" --yes
-#dcld tx auth approve-add-account --address="$vn_admin_addr" --from alice --yes
+docker_exec "$GVN_NAME" dcld tx auth propose-add-account --address "$vn_admin_addr" --pubkey "$vn_admin_pubkey" --roles="NodeAdmin" --from jack --yes
+docker_exec "$GVN_NAME" dcld tx auth approve-add-account --address="$vn_admin_addr" --from alice --yes
 
 echo "$GVN_NAME: Add Node \"$VN_NAME\" to validator set"
 

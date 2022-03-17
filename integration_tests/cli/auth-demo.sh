@@ -35,7 +35,7 @@ user_pubkey=$(echo $passphrase | dcld keys show $user -p)
 jack_address=$(echo $passphrase | dcld keys show jack -a)
 alice_address=$(echo $passphrase | dcld keys show alice -a)
 bob_address=$(echo $passphrase | dcld keys show bob -a)
-anna_address=$(echo $passphrase | dcld keys show anna -a)
+# anna_address=$(echo $passphrase | dcld keys show anna -a)
 
 vid=$RANDOM
 pid=$RANDOM

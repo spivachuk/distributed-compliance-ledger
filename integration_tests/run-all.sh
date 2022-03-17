@@ -36,7 +36,7 @@ fi
 cleanup() {
     make localnet_clean
 }
-trap cleanup EXIT
+# trap cleanup EXIT
 
 source integration_tests/cli/common.sh
 

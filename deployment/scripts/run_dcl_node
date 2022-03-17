@@ -276,6 +276,28 @@ function build_genesis {
     if [[ -n "$_acc_address_tr" && -n "$_acc_pubkey_tr" ]]; then
         dcld add-genesis-account --address "$_acc_address_tr" --pubkey "$_acc_pubkey_tr" --roles "Trustee"
     fi
+
+    dcld keys add jack
+    dcld keys add alice
+    dcld keys add bob
+    dcld keys add anna
+
+    jack_address=$(dcld keys show jack -a)
+    jack_pubkey=$(dcld keys show jack -p)
+
+    alice_address=$(dcld keys show alice -a)
+    alice_pubkey=$(dcld keys show alice -p)
+
+    bob_address=$(dcld keys show bob -a)
+    bob_pubkey=$(dcld keys show bob -p)
+
+    anna_address=$(dcld keys show anna -a)
+    anna_pubkey=$(dcld keys show anna -p)
+
+    dcld add-genesis-account --address="$jack_address" --pubkey="$jack_pubkey" --roles="Trustee"
+    dcld add-genesis-account --address="$alice_address" --pubkey="$alice_pubkey" --roles="Trustee"
+    dcld add-genesis-account --address="$bob_address" --pubkey="$bob_pubkey" --roles="Trustee"
+
     dcld gentx --chain-id "$CHAIN_ID" "$_key_name_admin"
     dcld collect-gentxs
     dcld validate-genesis
@@ -462,6 +484,8 @@ if [[ -n "$KEY_NAME" ]]; then
     ACC_PUBKEY="$(grep pubkey <<<"$KEY_INFO" | awk '{print $NF}' | sed -e "s/^'//" -e "s/'$//")"
 fi
 
+ACC_ADDR_TR=
+ACC_PUBKEY_TR=
 if [[ -n "$KEY_NAME_GEN_TRUSTEE" ]]; then
     KEY_INFO="$(dcld keys show --output text "${KEY_NAME_GEN_TRUSTEE}")"
     ACC_ADDR_TR="$(grep address <<<"$KEY_INFO" | awk '{print $NF}')"
